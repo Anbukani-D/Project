@@ -1,33 +1,17 @@
-import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+// Login page 
+// 07-01-2021
 
+import React from 'react'
+import {  StyleSheet, View,} from 'react-native'
+import Login from "./Screens/Login"
 class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <LinearGradient
-          colors={['red', 'yellow', 'green' ]}
-          style={styles.linearGradient}
-        >
-          <Text>Vertical Gradient</Text>
-        </LinearGradient>
-      </View>
-    )
-  }
+    render() {
+        return (
+               <Login/>
+        )
+    }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  linearGradient: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 5,
-    height: 200,
-    width: 350,
-  },
+    
 })
 export default App
