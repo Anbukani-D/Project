@@ -21,7 +21,7 @@ class ChangePassword extends React.Component {
                     <InputBox inputIcon = "lock" iconSize={20} placeholderText="Confirm password" />
                 </View>
                 <View style={[styles.justifyCenterContainer , {paddingTop:10, paddingLeft:30}]}>
-                    <CustomButton buttonName="SUBMIT" onPress={() => this.props.navigation.navigate('ChangePassword')}/>
+                    <CustomButton buttonName="SUBMIT" onPress={() => alert('Changed Password!')}/>
                 </View>
             </View>
         )

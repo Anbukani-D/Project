@@ -24,7 +24,7 @@ class FeedBack extends React.Component {
                     <MessageBox  placeholderText="Your Feedback within 400 characters" />
                 </View>
                 <View style={[styles.justifyCenterContainer , {paddingTop:10, paddingLeft:30}]}>
-                <CustomButton buttonName="SUBMIT" onPress={() => this.props.navigation.navigate('FeedBack')}/>
+                <CustomButton buttonName="SUBMIT" onPress={() => alert('FeedBack Saved!')}/>
                 </View>
             </View>
         )

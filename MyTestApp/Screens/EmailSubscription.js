@@ -10,12 +10,12 @@ class EmailSubscription extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <HeaderContent pageTitle="FORGOT PASSWORD" headerContent="Lorem Ipsum is simply dummy text for printing any typesetting industry."/>
+                <HeaderContent pageTitle="EMAIL SUBSCRIPTION" headerContent="Lorem Ipsum is simply dummy text for printing any typesetting industry."/>
                 <View style={[styles.justifyCenterContainer , {paddingTop:20, paddingLeft:35}]}>
                     <InputBox inputIcon = "envelope-o" iconSize={18} placeholderText="Enter email id"/>
                 </View>
-                <View style={[styles.justifyCenterContainer , {paddingTop:10, paddingLeft:30}]}>
-                <CustomButton buttonName="SUBMIT" onPress={() => this.props.navigation.navigate('EmailSubscription')}/>
+                <View style={[styles.justifyCenterContainer , {padding:10, paddingLeft:30 , marginBottom:10}]}>
+                    <CustomButton buttonName="SUBMIT" onPress={() => alert('Record Saved!')}/>
                 </View>
             </View>
         )

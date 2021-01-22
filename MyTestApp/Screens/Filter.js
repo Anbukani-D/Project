@@ -7,11 +7,13 @@ import { HeaderContent, SortByButton, SortByBorderButton, OptionBox, CustomButto
 // import { Slider} from 'react-native-elements'
 class Filter extends React.Component {
     state={
-        slideValue:0
+        slideValue:0,
+        items:true,
     }
     render() {
         return (
             <ScrollView style={styles.container}>
+                
                 <HeaderContent pageTitle="FILTER" headerContent="Lorem Ipsum is simply dummy text for printing any typesetting industry."/>
                 <View style={styles.sliderContainer}>
                     <Text style={{color:'#c203fc'}}>Pricing</Text>
@@ -37,6 +39,12 @@ class Filter extends React.Component {
                     <View style={styles.buttonContainer}>
                         <SortByButton buttonName="Top - Bottom"/>
                         <SortByBorderButton buttonName="Bottom - Top"/>
+                    </View>
+                </View>
+                <View style={styles.sliderContainer}>
+                    <Text style={{color:'#c203fc'}}>Category</Text>
+                    <View style={styles.buttonContainer}>
+                        
                     </View>
                 </View>
                 <View
@@ -107,7 +115,6 @@ class Filter extends React.Component {
                     <CustomButton buttonName="SUBMIT" onPress={() => this.props.navigation.navigate('Filter')}/>
                 </View>
             </ScrollView>
-         
         )
     }
 }

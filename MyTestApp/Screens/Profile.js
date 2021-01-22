@@ -2,59 +2,94 @@
 // 18-01-2021
 
 import React from 'react'
-import {  StatusBar,StyleSheet, View, Text,Switch} from 'react-native'
+import {  StatusBar,StyleSheet, View, Text,Switch, ScrollView,Image, TouchableOpacity} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import { InputBox, CustomButton } from '../Common/Common'
-import { CheckBox } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 class Profile extends React.Component {
     state={
-        isChecked:true,
-        isEnabled:true,
-        toggleSwitch:true
+        female:true,
+        male:true,
     }
     render() {
         return (
             <View style={styles.container}>
                 <StatusBar hidden={true}/>
                 <LinearGradient
-                    style={styles.logoContainer}
+                    style={[styles.logoContainer]}
                     colors={['#b41a6a', '#7c1fa1' , ]}
                     start ={{x:0,y:0}}
                     end ={{x:0,y:1}}
-                >         
-                    <View style={[styles.alignCenter,{ marginTop:70}]}>         
-                        <Icon name="connectdevelop" size={45} color="white" />  
-                        <Text style={styles.logoTextStyle}>{this.state.userName?'Anbu':'Anbu David'}</Text>
+                >  
+                    <View style={[styles.alignCenter,{ marginTop:20}]}> 
+                        <View style={styles.row}>      
+                            <Image
+                                style={styles.picContainer}
+                                source={require('../images/img.jpeg')}
+                            /> 
+                            <TouchableOpacity>
+                                <View style={[styles.iconContainer, styles.imageIconContainer]}>
+                                    <Icon name="image" size={14} color="black"  />
+                                </View> 
+                            </TouchableOpacity>
+                        </View> 
+                        <View style={styles.row}>
+                            <Text style={styles.logoTextStyle}>{this.state.userName ? 'Anbu':'Anbu David'}</Text>
+                            <TouchableOpacity>
+                                <View style={styles.iconContainer}>
+                                    <Icon name="edit" size={15} color="black"  />
+                                </View>  
+                            </TouchableOpacity>  
+                        </View>
                     </View>
-                    <View style={[styles.contentContainer]}>
+                    <ScrollView style={styles.contentContainer}>
                         <Text style={styles.pageTitleText}>USER PROFILE</Text>
                         <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
                             <InputBox inputIcon = "user-o" iconSize={20} placeholderText="Enter User Name" label="User Name"/>
                         </View>
-                        <View style={styles.justifyCenterContainer}>
+                        <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
                             <InputBox inputIcon = "envelope-o" iconSize={18} placeholderText="Enter Email" label="Email Id"/>
                         </View> 
-                        <View style={styles.justifyCenterContainer}>
-                            <InputBox inputIcon = "mobile" iconSize={20} placeholderText="Mobile Number" label="Enter your 10 digit mobile number"/>
+                        <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
+                            <InputBox inputIcon = "mobile" iconSize={25} placeholderText="Mobile Number" label="Enter your 10 digit mobile number"/>
                         </View>
-                        <View style={styles.justifyCenterContainer}>
-                            <InputBox inputIcon = "lock" iconSize={20} placeholderText="DD/MM/YYYY" label="Date of Birth"/>
+                        <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
+                            <InputBox inputIcon = "calendar" iconSize={20} placeholderText="DD/MM/YYYY" label="Date of Birth"/>
                         </View>
-                        <View style={styles.justifyCenterContainer}>
+                        <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
                             <Text style={[styles.labelText , {paddingBottom:10}]}>Sex</Text>
-                            <Switch
-                                trackColor={{ false: "#767577", true: "#81b0ff" }}
-                                thumbColor={this.state.isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                                onValueChange={()=>this.setState(isEnabled)}
-                                value={this.state.isEnabled}
-                            />
-
+                            <View style={styles.row}>
+                                <View style={[styles.row,{width:80}]}>
+                                    <View>
+                                        <Switch
+                                            trackColor={{ false: "#7c1fa1", true: "#eee" }}
+                                            thumbColor={this.state.male ? "#7c1fa1" : "#eee"}
+                                            onValueChange={(male) => this.setState({male})}
+                                            value={this.state.male}
+                                        />
+                                    </View>
+                                    <View>
+                                        <Text style={styles.switchText}>Male</Text>
+                                    </View>
+                                </View>
+                                <View style={ [styles.row,{ width:80}]}>
+                                    <Switch
+                                        trackColor={{ false: "#7c1fa1", true: "#eee" }}
+                                        thumbColor={this.state.female ? "#7c1fa1" : "#eee"}
+                                        onValueChange={(female) => this.setState({female})}
+                                        value={this.state.female}
+                                    />
+                                    <View>
+                                        <Text style={styles.switchText}>Female</Text>
+                                    </View>
+                                </View>
+                            </View>
                         </View>    
-
-                        <CustomButton buttonName="SAVE" onPress={() => this.props.navigation.navigate('Profile')}/>   
-                    </View>     
+                        <View style={ {paddingTop:10, paddingBottom:50 , marginBottom:20}}> 
+                            <CustomButton buttonName="SAVE" onPress={() => alert('Saved!')}/> 
+                        </View>
+                    </ScrollView>     
                 </LinearGradient>
             </View>
         )
@@ -122,6 +157,33 @@ const styles = StyleSheet.create({
         color:'#c203fc',
         marginLeft:5,
     },
+    row:{
+        flexDirection:'row'
+    },
+    switchText:{
+        color:'grey',
+        paddingTop:5
+    },
+    picContainer:{
+        borderRadius:45,
+        width:90,
+        height:90
+    },
+    iconContainer:{
+        width:35,
+        height:35,
+        borderRadius:20,
+        padding:10,
+        backgroundColor:'white',
+        marginLeft:10,
+        marginTop:14
+    },
+    imageIconContainer:{
+        position:'absolute',
+        top:-15,
+        left:-22
+
+    }
     
 })
 export default Profile

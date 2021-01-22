@@ -40,7 +40,7 @@ class SubmitRequest extends React.Component {
                     <Text style={{fontSize:12,color:'grey'}}>File size should be within 10 mb </Text>
                 </View>
                 <View style={[styles.justifyCenterContainer , {paddingTop:10, paddingLeft:30}]}>
-                    <CustomButton buttonName="SUBMIT" onPress={() => this.props.navigation.navigate('SubmitRequest')}/>
+                    <CustomButton buttonName="SUBMIT" onPress={() => alert('Saved Request!')}/>
                 </View>
             </ScrollView>
          

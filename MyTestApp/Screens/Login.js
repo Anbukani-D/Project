@@ -7,10 +7,18 @@ import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { InputBox, CustomButton } from '../Common/Common'
 import { CheckBox } from 'react-native-elements'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import {CheckUserName,CheckPassword} from '../Common/Validation'
+
+const userInfo ={userName: "Anbu@gmail.com", password: "Anbu1@Kani"}
 
 class Login extends React.Component {
     state={
         isChecked:true,
+        userName:'',
+        password:'',
+        userNameErr:'',
+
     }
     render() {
         return (
@@ -29,10 +37,41 @@ class Login extends React.Component {
                     <View style={[styles.contentContainer]}>
                         <Text style={styles.pageTitleText}>SIGN IN</Text>
                         <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
-                            <InputBox inputIcon = "user-o" placeholderText="User Name"/>
+                            <InputBox 
+                                inputIcon = "user-o" 
+                                iconSize={20} 
+                                placeholderText="User Name"
+                                onChangeText={userName => this.setState({userName: userName})}
+                                value={this.state.userName}
+                                onEndEditing={() => this.validateUsername()}
+                                onSubmitEditing={this.onPressLogin}
+                                onFocus={() =>
+                                    this.setState({
+                                        userNameErr: '',
+                                    })
+                                }
+                                onBlur={()=> this.setState({userNameErr:''})}
+                                error={this.state.userNameErr}
+                                
+                            />
                         </View>
                         <View style={styles.justifyCenterContainer}>
-                            <InputBox inputIcon = "lock" placeholderText="Password"/>
+                            <InputBox 
+                                inputIcon = "lock" 
+                                iconSize={20} 
+                                placeholderText="Password"
+                                secureTextEntry={true}
+                                onEndEditing={() => this.validatePassword()}
+                                onSubmitEditing={this.onPressLogin}
+                                onFocus={() =>
+                                    this.setState({
+                                        passwordErr: '',
+                                    })
+                                }
+                                onBlur={()=> this.setState({passwordErr:''})}
+                                error={this.state.passwordErr}
+                                
+                            />
                         </View> 
                         <View style={{flexDirection:'row'}}>
                             <CheckBox
@@ -41,12 +80,16 @@ class Login extends React.Component {
                                 checked={this.state.isChecked}
                                 onPress={() => this.setState({isChecked: !this.state.isChecked})}  
                             />
-                            <Text style={[styles.textColor , { paddingTop:20, paddingLeft:50}]}>Forgot Password</Text>  
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+                                <Text style={[styles.textColor , { paddingTop:20, paddingLeft:50}]}>Forgot Password</Text> 
+                            </TouchableOpacity> 
                         </View>   
-                        <CustomButton buttonName="SIGN IN" onPress={() => this.props.navigation.navigate('SignUp')}/>
+                        <CustomButton buttonName="SIGN IN" onPress={this.onPressLogin}/>
                         <View style={[styles.rowDirection , styles.textCenter, styles.justifyContent ,{ paddingTop:15 }]}>
                             <Text style={styles.textCenter}>Still not connected ? </Text>
-                            <Text style={styles.textColor}>Sign Up</Text>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('SignUp')}>
+                                <Text style={styles.textColor} >Sign Up</Text>
+                            </TouchableOpacity>
                         </View>
                         <View style={[styles.alignCenter,styles.rowDirection]}>
                             <View style={styles.bar}></View>
@@ -68,7 +111,42 @@ class Login extends React.Component {
             </View>
         )
     }
+    validateUsername = () => {
+        const usernameError = CheckUserName(userInfo.userName);
+        if (usernameError === 1) {
+            this.setState({ userNameErr: 'Username Empty' });
+            return false;
+        } else if (usernameError === 2) {
+            this.setState({ userNameErr: 'Enter valid email' });
+            return false;
+        } else if (usernameError == 3) {
+            this.setState({ userNameErr: 'Enter valid phone' });
+            return false;
+        } else return true;
+    };
+    validatePassword = () => {
+        const passwordError = CheckPassword(userInfo.password);
+        if (passwordError === 1) {
+            this.setState({ passwordErr: 'Password Empty' });
+            return false;
+        } else if (passwordError === 2) {
+            this.setState({ passwordErr: 'Invalid password' });
+            return false;
+        } else return true;
+    };
+    onPressLogin =() => {
+        const userNameErr = this.validateUsername(userInfo.username);
+        const passwordErr = this.validatePassword(userInfo.password);
+        if (userNameErr && passwordErr) {
+            
+        }
+        this.props.navigation.navigate('Home');
+        
+               
+    }
 }
+
+
 const styles = StyleSheet.create({
     container: {
         flex:1,

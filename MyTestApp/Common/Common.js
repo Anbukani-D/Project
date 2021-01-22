@@ -3,7 +3,7 @@ import { StyleSheet, View, TextInput,TouchableOpacity,Text} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/FontAwesome'
 export const InputBox  = props => {
-    let {inputIcon, iconSize, placeholderText,label, ...rest} = props;
+    let {inputIcon, iconSize, placeholderText,label,error, ...rest} = props;
     return (
         <>
         <Text style={[styles.labelText , {paddingBottom:10}]}>{label}</Text>
@@ -18,8 +18,10 @@ export const InputBox  = props => {
                         <Icon name={inputIcon} size={iconSize} color="white"  />
                     </LinearGradient>  
                 </View> 
-            <TextInput placeholder={placeholderText} {...rest}  />      
+            <TextInput placeholder={placeholderText} {...rest}  />  
+                
         </View>
+        <Text style={styles.errorText}>{error}</Text>
       </>
     );
 };
@@ -41,13 +43,14 @@ export const CustomButton  = props => {
       <View>
           <TouchableOpacity
                 style={styles.buttonContainer}
-                // onPress={}
+                {...rest}
             >
             <LinearGradient
                 style={styles.buttonContainer}
                 colors={['#9f1b80', '#7c1fa1',  ]}
                 start ={{x:0,y:0}}
                 end ={{x:1,y:1}}
+
             > 
                 <Text style={styles.buttonText} >{buttonName}</Text>
             </LinearGradient>  
@@ -118,15 +121,19 @@ export const SortByBorderButton = props => {
     )
 }
 export const OptionBox = props => {
-    let {buttonName, ...rest} = props;
+    let {buttonName} = props;
+    const [items, setItems] = useState(true);
+    
     return (
+        <>
+        {items?
             <View
-                style={[styles.borderButton, styles.row,{justifyContent:'space-between'}]}
+                style={[styles.borderButton, styles.row,{justifyContent:'space-between'}]} 
             > 
                 <Text style={ {color:'black', textAlign:'left', paddingTop:10,}} >{buttonName}</Text>
                 <View style={ { paddingVertical:5,}}>
                 <TouchableOpacity
-                    // onPress={}
+                    onPress={()=> setItems(!items)}
                 >
                 <LinearGradient
                     style={styles.closeIcon}
@@ -134,14 +141,37 @@ export const OptionBox = props => {
                     start ={{x:0,y:0}}
                     end ={{x:1,y:1}}
                 >
-                    <Icon name="times" size={12} color="white"  />
+                    <Icon name="times" size={12} color="white"   />
                 </LinearGradient>  
             </TouchableOpacity>  
             </View>    
             
         </View>
+        :null}
+        </>
     )
 }
+export const SelectBox  = props => {
+    let {inputIcon, iconSize, placeholderText,label, ...rest} = props;
+    return (
+        <>
+        <Text style={[styles.labelText , {paddingBottom:10}]}>{label}</Text>
+        <View style={styles.inputContainer}>
+            <View style={styles.start}>
+                <LinearGradient
+                        style={styles.inputBoxIcon}
+                        colors={['#9f1b80', '#7c1fa1']}
+                        start ={{x:0,y:0}}
+                        end ={{x:1,y:1}}
+                    >
+                        <Icon name={inputIcon} size={iconSize} color="white"  />
+                    </LinearGradient>  
+                </View> 
+            <TextInput placeholder={placeholderText} {...rest}  />      
+        </View>
+      </>
+    );
+};
 
 const styles = StyleSheet.create({
     inputContainer: {
@@ -217,6 +247,11 @@ const styles = StyleSheet.create({
         height:25,
         borderRadius:20,
         padding:8,
+    },
+    errorText:{
+        color:'red',
+        fontSize:11,
+        paddingLeft:20
     },
     
 })
