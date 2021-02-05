@@ -3,9 +3,6 @@
 
 import React from 'react'
 import {  StatusBar,StyleSheet, View, Text,Switch, ScrollView,Image, TouchableOpacity,Dimensions} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
-import { InputBox, CustomButton } from '../Common/Common'
-import Icon from 'react-native-vector-icons/FontAwesome'
 
 const DEVICE_WIDTH = Dimensions.get('window').width;    
 class Slider extends React.Component {

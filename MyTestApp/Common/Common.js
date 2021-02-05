@@ -1,13 +1,15 @@
 import React, { useState }  from 'react'
-import { StyleSheet, View, TextInput,TouchableOpacity,Text} from 'react-native'
+import { StyleSheet, View, TextInput,TouchableOpacity,Text, Keyboard,KeyboardAvoidingView} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { Datepicker, Autocomplete, AutocompleteItem} from '@ui-kitten/components';
+
 export const InputBox  = props => {
-    let {inputIcon, iconSize, placeholderText,label,error, ...rest} = props;
+    let {inputIcon, iconSize, placeholderText,label,error,  iconRight, ...rest} = props;
     return (
         <>
         <Text style={[styles.labelText , {paddingBottom:10}]}>{label}</Text>
-        <View style={styles.inputContainer}>
+        <View style={[styles.inputContainer,styles.row]}>
             <View style={styles.start}>
                 <LinearGradient
                         style={styles.inputBoxIcon}
@@ -18,21 +20,26 @@ export const InputBox  = props => {
                         <Icon name={inputIcon} size={iconSize} color="white"  />
                     </LinearGradient>  
                 </View> 
-            <TextInput placeholder={placeholderText} {...rest}  />  
-                
+            <TextInput placeholder={placeholderText} {...rest}/>  
+                <View style={styles.passwordIcon}>
+                    <TouchableOpacity onPress={props.iconRightFunction}>
+                        <Icon name={iconRight} size={iconSize} color="black"  /> 
+                    </TouchableOpacity>  
+                </View> 
         </View>
         <Text style={styles.errorText}>{error}</Text>
       </>
     );
 };
 export const InputField  = props => {
-    let {inputIcon, iconSize, placeholderText,label, ...rest} = props;
+    let {inputIcon, iconSize, placeholderText,label, error, ...rest} = props;
     return (
         <>
         <Text style={[styles.labelText , {paddingBottom:10}]}>{label}</Text>
-        <View style={[styles.inputContainer ,{paddingLeft:10}]}>
+        <View style={[styles.inputContainer, styles.row,{paddingLeft:10}]}>
             <TextInput placeholder={placeholderText} {...rest}  />      
         </View>
+        <Text style={styles.errorText}>{error}</Text>
       </>
     );
 };
@@ -68,18 +75,16 @@ export const HeaderContent  = props => {
     );
 };
 export const MessageBox = props => {
-    let { placeholderText,label, ...rest} = props;
+    let { placeholderText,label, error, ...rest} = props;
     return (
     <>
         <Text style={[styles.labelText , {paddingBottom:10}]}>{label}</Text>
-        <View style={styles.inputContainer}>
+        <View style={[styles.messageBoxContainer,styles.inputContainer]}>
             <TextInput placeholder={placeholderText} {...rest}  
-                multiline
-                numberOfLines={9}
-                // onChangeText={text => onChangeText(text)}
-                // value={value}
+                multiline={true}
             />
         </View>
+        <Text style={styles.errorText}>{error}</Text>
     </>
     )
 }
@@ -109,7 +114,6 @@ export const SortByBorderButton = props => {
         <View>
             <TouchableOpacity
                 style={styles.smallButton}
-                // onPress={}
             >
             <View
                 style={styles.borderButton}
@@ -156,7 +160,7 @@ export const SelectBox  = props => {
     return (
         <>
         <Text style={[styles.labelText , {paddingBottom:10}]}>{label}</Text>
-        <View style={styles.inputContainer}>
+        <View style={styles.inputContainer, styles.row}>
             <View style={styles.start}>
                 <LinearGradient
                         style={styles.inputBoxIcon}
@@ -172,10 +176,107 @@ export const SelectBox  = props => {
       </>
     );
 };
+export const CustomDatePicker  = props => {
+    let {inputIcon, iconSize, placeholderText,label,error,...rest} = props;
+    return (
+        <View>
+        <Text style={[styles.labelText , {paddingBottom:10}]}>{label}</Text>
+        <View style={[styles.inputContainer,styles.row]}>
+            <View style={styles.start}>
+                <LinearGradient
+                        style={styles.inputBoxIcon}
+                        colors={['#9f1b80', '#7c1fa1']}
+                        start ={{x:0,y:0}}
+                        end ={{x:1,y:1}}
+                    >
+                        <Icon name={inputIcon} size={iconSize} color="white"  />
+                    </LinearGradient>  
+                </View> 
+                <Datepicker
+                    placeholder={placeholderText}
+                    {...rest}
+                />
+            
+        </View>
+        <Text style={styles.errorText}>{error}</Text>
+        
+      </View>
+    );
+};
+    const movies = [
+        { title: 'Star Wars' },
+        { title: 'Back to the Future' },
+        { title: 'The Matrix' },
+        { title: 'Inception' },
+        { title: 'Interstellar' },
+    ];
+    const filter = (item, query) => item.title.toLowerCase().includes(query.toLowerCase());
+    export const CustomSearchSelect  = props => {
+        const [value, setValue] = React.useState(null);
+        const [data, setData] = React.useState(movies);
+        const onSelect = (index) => {
+            setValue(movies[index].title);
+        };
+
+        const onChangeText = (query) => {
+            setValue(query);
+            setData(movies.filter(item => filter(item, query)));
+        };
+
+        const renderOption = (item, index) => (
+            <AutocompleteItem
+                key={index}
+                title={item.title}
+            />
+        );
+        let {inputIcon, iconSize, placeholderText,label,error,iconRight,...rest} = props;
+        return (
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.container}
+            >
+            <Text style={[styles.labelText , {paddingBottom:10}]}>{label}</Text>
+            <View style={[styles.inputContainer,styles.row]}>
+                <View style={styles.start}>
+                    <LinearGradient
+                            style={styles.inputBoxIcon}
+                            colors={['#9f1b80', '#7c1fa1']}
+                            start ={{x:0,y:0}}
+                            end ={{x:1,y:1}}
+                        >
+                            <Icon name={inputIcon} size={iconSize} color="white"  />
+                        </LinearGradient>  
+                    </View> 
+                    <Autocomplete
+                        onPress={Keyboard.dismiss}
+                        style={styles.selectStyle}
+                        placeholder={placeholderText}
+                        {...rest}
+                        value={value}
+                        onSelect={onSelect}
+                        onChangeText={onChangeText}>
+                        {data.map(renderOption)}
+                    
+                    </Autocomplete>
+                    <View style={styles.passwordIcon}>
+                        <TouchableOpacity onPress={props.iconRightFunction}>
+                            <Icon name={iconRight} size={iconSize} color="black"  /> 
+                        </TouchableOpacity>  
+                    </View> 
+                
+            </View>
+            <Text style={styles.errorText}>{error}</Text>
+            
+        </KeyboardAvoidingView>
+        );
+    };
+
 
 const styles = StyleSheet.create({
-    inputContainer: {
+    row:{
         flexDirection: 'row',
+    },
+    inputContainer: {
         width:340,   
         borderRadius:30,
         borderColor:'grey',
@@ -253,6 +354,20 @@ const styles = StyleSheet.create({
         fontSize:11,
         paddingLeft:20
     },
+    passwordIcon:{
+        flex:1,
+        alignSelf:'center',
+        alignItems:'flex-end',
+        marginRight:15
+    },
+    messageBoxContainer:{
+        height:160,
+        padding:10
+    },
+    selectStyle:{
+        borderRadius:0,
+        backgroundColor:'#ffffff',
+    }
     
 })
 

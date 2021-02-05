@@ -2,7 +2,7 @@
 // 07-01-2021
 
 import React from 'react'
-import {  StatusBar,StyleSheet, View, Text} from 'react-native'
+import {  StatusBar,StyleSheet, View, Text,ActivityIndicator} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { InputBox, CustomButton } from '../Common/Common'
@@ -14,12 +14,16 @@ const userInfo ={userName: "Anbu@gmail.com", password: "Anbu1@Kani"}
 
 class Login extends React.Component {
     state={
-        isChecked:true,
         userName:'',
         password:'',
         userNameErr:'',
+        passwordSecure:true,
+        rememberMe:true,
+        isAuthenticated:false,
+        resData:''
 
     }
+    
     render() {
         return (
             <View style={styles.container}>
@@ -51,8 +55,7 @@ class Login extends React.Component {
                                     })
                                 }
                                 onBlur={()=> this.setState({userNameErr:''})}
-                                error={this.state.userNameErr}
-                                
+                                error={this.state.userNameErr}   
                             />
                         </View>
                         <View style={styles.justifyCenterContainer}>
@@ -60,7 +63,10 @@ class Login extends React.Component {
                                 inputIcon = "lock" 
                                 iconSize={20} 
                                 placeholderText="Password"
-                                secureTextEntry={true}
+                                secureTextEntry={this.state.passwordSecure}
+                                iconRight = {this.state.passwordSecure ? "eye-slash":'eye'}
+                                value={this.state.password}
+                                onChangeText={password => this.setState({password: password})}
                                 onEndEditing={() => this.validatePassword()}
                                 onSubmitEditing={this.onPressLogin}
                                 onFocus={() =>
@@ -68,17 +74,22 @@ class Login extends React.Component {
                                         passwordErr: '',
                                     })
                                 }
+                                iconRightFunction={() =>
+                                    this.setState({
+                                        passwordSecure: !this.state
+                                            .passwordSecure
+                                    })
+                                }
                                 onBlur={()=> this.setState({passwordErr:''})}
-                                error={this.state.passwordErr}
-                                
+                                error={this.state.passwordErr}   
                             />
                         </View> 
                         <View style={{flexDirection:'row'}}>
                             <CheckBox
                                 style={{backgroundColor:'white', borderWidth:0 }}
                                 title='Remember'
-                                checked={this.state.isChecked}
-                                onPress={() => this.setState({isChecked: !this.state.isChecked})}  
+                                checked={this.state.rememberMe}
+                                onPress={() => this.setState({rememberMe: !this.state.rememberMe})}  
                             />
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
                                 <Text style={[styles.textColor , { paddingTop:20, paddingLeft:50}]}>Forgot Password</Text> 
@@ -112,20 +123,17 @@ class Login extends React.Component {
         )
     }
     validateUsername = () => {
-        const usernameError = CheckUserName(userInfo.userName);
+        const usernameError = CheckUserName(this.state.userName);
         if (usernameError === 1) {
-            this.setState({ userNameErr: 'Username Empty' });
+            this.setState({ userNameErr: 'Username empty' });
             return false;
         } else if (usernameError === 2) {
-            this.setState({ userNameErr: 'Enter valid email' });
-            return false;
-        } else if (usernameError == 3) {
-            this.setState({ userNameErr: 'Enter valid phone' });
+            this.setState({ userNameErr: 'Invalid user name' });
             return false;
         } else return true;
     };
     validatePassword = () => {
-        const passwordError = CheckPassword(userInfo.password);
+        const passwordError = CheckPassword(this.state.password);
         if (passwordError === 1) {
             this.setState({ passwordErr: 'Password Empty' });
             return false;
@@ -134,17 +142,54 @@ class Login extends React.Component {
             return false;
         } else return true;
     };
-    onPressLogin =() => {
-        const userNameErr = this.validateUsername(userInfo.username);
-        const passwordErr = this.validatePassword(userInfo.password);
-        if (userNameErr && passwordErr) {
+    ValidateAll = ( ) => {
+        const userNameInput = this.validateUsername();
+        const passwordInput = this.validatePassword();
+        console.log('validation',userNameInput,  passwordInput )
+        if (userNameInput  && passwordInput) {
+            return true;
+		} else {
+            return false;   
+        }
+    }
+    
+    onPressLogin = () => {
+        console.log('valida')
+        const allValidation = this.ValidateAll()
+        if (allValidation) {
+            let url="http://192.168.2.61:3003/users/login";
+            const requestBody = {
+                    user_name:this.state.userName,
+                    password:this.state.password
+            }
+            const requestOptions = {
+                method: 'POST',
+                headers: {Accept: "application/json","Content-Type": "application/json"},
+                body: JSON.stringify(requestBody)
+            };
+            console.log("HERE 2", requestOptions);
+            fetch(url, requestOptions)
+            .then(response => {
+                console.log("HERE");
+                return response.json();
+            })
+            .then(data => {
+                console.log("HERE 1");
+                console.log("res => ", data);
+            }).catch(function(error) {
+                console.log('There has been a problem with your fetch operation: ' + error.message);
+                    // ADD THIS THROW error
+                    throw error;
+            });
             
         }
+        alert('User logged in successfully!')
         this.props.navigation.navigate('Home');
         
-               
+                
     }
 }
+
 
 
 const styles = StyleSheet.create({

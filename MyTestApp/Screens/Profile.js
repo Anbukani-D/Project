@@ -2,15 +2,24 @@
 // 18-01-2021
 
 import React from 'react'
-import {  StatusBar,StyleSheet, View, Text,Switch, ScrollView,Image, TouchableOpacity} from 'react-native'
+import {  StatusBar,StyleSheet, View, Text, ScrollView,Image, TouchableOpacity} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { InputBox, CustomButton } from '../Common/Common'
+import { InputBox, CustomButton, CustomDatePicker } from '../Common/Common'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { Radio } from '@ui-kitten/components';
+import {CheckUserName, CheckEmail,CheckPhone} from '../Common/Validation'
+import Home from './Home'
+
 
 class Profile extends React.Component {
     state={
-        female:true,
-        male:true,
+        userName:'',
+        email:'',
+        phoneNumber:'',
+        dateOfBirth:'',
+        gender:false,
+        index:'',
+        selectedIndex:'',
     }
     render() {
         return (
@@ -46,53 +55,155 @@ class Profile extends React.Component {
                     <ScrollView style={styles.contentContainer}>
                         <Text style={styles.pageTitleText}>USER PROFILE</Text>
                         <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
-                            <InputBox inputIcon = "user-o" iconSize={20} placeholderText="Enter User Name" label="User Name"/>
+                            <InputBox 
+                                inputIcon = "user-o" 
+                                iconSize={20} 
+                                placeholderText="Enter User Name" 
+                                label="User Name"
+                                onChangeText={userName => this.setState({userName: userName})}
+                                value={this.state.userName}
+                                onEndEditing={() => this.validateUsername()}
+                                onSubmitEditing={this.onPressSignUp}
+                                onFocus={() =>
+                                    this.setState({
+                                        userNameErr: '',
+                                    })
+                                }
+                                onBlur={()=> this.setState({userNameErr:''})}
+                                error={this.state.userNameErr}
+                            />
                         </View>
                         <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
-                            <InputBox inputIcon = "envelope-o" iconSize={18} placeholderText="Enter Email" label="Email Id"/>
+                            <InputBox 
+                                inputIcon = "envelope-o" 
+                                iconSize={18} 
+                                placeholderText="Enter Email" 
+                                label="Email Id"
+                                onChangeText={email => this.setState({email: email})}
+                                value={this.state.email}
+                                onEndEditing={() => this.validateEmail()}
+                                onSubmitEditing={this.onPressSignUp}
+                                onFocus={() =>
+                                    this.setState({
+                                        emailErr: '',
+                                    })
+                                }
+                                onBlur={()=> this.setState({emailErr:''})}
+                                error={this.state.emailErr}
+                            />
                         </View> 
                         <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
-                            <InputBox inputIcon = "mobile" iconSize={25} placeholderText="Mobile Number" label="Enter your 10 digit mobile number"/>
+                            <InputBox 
+                                inputIcon = "mobile" 
+                                iconSize={25} 
+                                placeholderText="Mobile Number" 
+                                label="Enter your 10 digit mobile number"
+                                onChangeText={phoneNumber => this.setState({phoneNumber: phoneNumber})}
+                                value={this.state.phoneNumber}
+                                onEndEditing={() => this.validatePhoneNumber()}
+                                onSubmitEditing={this.onPressSignUp}
+                                onFocus={() =>
+                                    this.setState({
+                                        phoneNumberErr: '',
+                                    })
+                                }
+                                onBlur={()=> this.setState({phoneNumberErr:''})}
+                                error={this.state.phoneNumberErr}
+                            />
                         </View>
                         <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
-                            <InputBox inputIcon = "calendar" iconSize={20} placeholderText="DD/MM/YYYY" label="Date of Birth"/>
+                            <CustomDatePicker
+                                inputIcon = "calendar" 
+                                iconSize={20} 
+                                placeholderText="DD/MM/YYYY" 
+                                label="Date of Birth"
+                                date={this.state.dateOfBirth}
+                                onSelect={dateOfBirth => this.setState({dateOfBirth:dateOfBirth})}
+                                error={this.state.dateOfBirthErr}
+                            />
                         </View>
                         <View style={[styles.justifyCenterContainer , {paddingTop:20}]}>
-                            <Text style={[styles.labelText , {paddingBottom:10}]}>Sex</Text>
+                            <Text style={[styles.labelText , {paddingBottom:10}]}>Gender</Text>
                             <View style={styles.row}>
                                 <View style={[styles.row,{width:80}]}>
-                                    <View>
-                                        <Switch
-                                            trackColor={{ false: "#7c1fa1", true: "#eee" }}
-                                            thumbColor={this.state.male ? "#7c1fa1" : "#eee"}
-                                            onValueChange={(male) => this.setState({male})}
-                                            value={this.state.male}
-                                        />
-                                    </View>
-                                    <View>
-                                        <Text style={styles.switchText}>Male</Text>
-                                    </View>
-                                </View>
-                                <View style={ [styles.row,{ width:80}]}>
-                                    <Switch
-                                        trackColor={{ false: "#7c1fa1", true: "#eee" }}
-                                        thumbColor={this.state.female ? "#7c1fa1" : "#eee"}
-                                        onValueChange={(female) => this.setState({female})}
-                                        value={this.state.female}
-                                    />
-                                    <View>
-                                        <Text style={styles.switchText}>Female</Text>
-                                    </View>
+                                    <Radio
+                                        checked={this.state.gender==="MALE"}
+                                        onChange={gender => this.setState({gender:'MALE'})}>Male
+                                    </Radio>
+                                    <Radio 
+                                        checked={this.state.gender==="FEMALE"}
+                                        onChange={gender => this.setState({gender:'FEMALE'})}>Female
+                                    </Radio>
                                 </View>
                             </View>
                         </View>    
                         <View style={ {paddingTop:10, paddingBottom:50 , marginBottom:20}}> 
-                            <CustomButton buttonName="SAVE" onPress={() => alert('Saved!')}/> 
+                            <CustomButton buttonName="SAVE" onPress={this.onPressProfile}/> 
                         </View>
                     </ScrollView>     
                 </LinearGradient>
             </View>
         )
+    }
+    validateUsername = () => {
+        const usernameError = CheckUserName(this.state.userName);
+        if (usernameError === 1) {
+            this.setState({ userNameErr: 'Username empty' });
+            return false;
+        } else if (usernameError === 2) {
+            this.setState({ userNameErr: 'Invalid username' });
+            return false;
+        } else return true;
+    };
+    validateEmail = () => {
+        const emailError = CheckEmail(this.state.email);
+        if (emailError === 1) {
+            this.setState({ emailErr: 'Email empty' });
+            return false;
+        } else if (emailError === 2) {
+            this.setState({ emailErr: 'Invalid username' });
+            return false;
+        } else return true;
+    };
+    validatePhoneNumber = () => {
+        const phoneNumberError = CheckPhone(this.state.phoneNumber);
+        if (phoneNumberError === 1) {
+            this.setState({ phoneNumberErr: 'Phone number empty' });
+            return false;
+        } else if (phoneNumberError === 2) {
+            this.setState({ phoneNumberErr: 'Invalid phone number' });
+            return false;
+        } else return true;
+    };
+    validateDateOfBirth = () => {
+        const dateOfBirthError = CheckPhone(this.state.dateOfBirth);
+        if (dateOfBirthError === 1) {
+            this.setState({ dateOfBirthErr: 'DOB empty' });
+            return false;
+        } else if (dateOfBirthError === 2) {
+            this.setState({ dateOfBirthErr: 'Invalid DOB' });
+            return false;
+        } else return true;
+    }
+
+    ValidateAll = ( ) => {
+        const userNameInput = this.validateUsername();
+        const emailInput = this.validateEmail();
+        const phoneNumberInput = this.validatePhoneNumber();
+        const dateOfBirthInput = this.validateDateOfBirth();
+        // console.log('validation',userNameInput,emailInput , phoneNumberInput)
+        if (userNameInput  && emailInput && phoneNumberInput && dateOfBirthInput) {
+            return true;
+        } else {
+            return false;
+        } 
+    }
+    onPressProfile = () => {
+        const allValidation = this.ValidateAll()
+        if (allValidation) {
+            alert('Saved!')
+            this.props.navigation.navigate('Home');   
+        }        
     }
 }
 const styles = StyleSheet.create({
@@ -184,6 +295,7 @@ const styles = StyleSheet.create({
         left:-22
 
     }
+    
     
 })
 export default Profile

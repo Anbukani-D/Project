@@ -3,7 +3,7 @@
 
 import React from 'react'
 import {  StyleSheet, ScrollView,Slider,Text, View} from 'react-native'
-import { HeaderContent, SortByButton, SortByBorderButton, OptionBox, CustomButton } from '../Common/Common'
+import { HeaderContent, SortByButton, SortByBorderButton, OptionBox, CustomButton, CustomSearchSelect } from '../Common/Common'
 // import { Slider} from 'react-native-elements'
 class Filter extends React.Component {
     state={
@@ -13,8 +13,7 @@ class Filter extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-                
-                <HeaderContent pageTitle="FILTER" headerContent="Lorem Ipsum is simply dummy text for printing any typesetting industry."/>
+                <HeaderContent pageTitle="FILTER" headerContent="Filter the items by selecting the options from the dropdown list"/>
                 <View style={styles.sliderContainer}>
                     <Text style={{color:'#c203fc'}}>Pricing</Text>
                 <Slider
@@ -44,7 +43,15 @@ class Filter extends React.Component {
                 <View style={styles.sliderContainer}>
                     <Text style={{color:'#c203fc'}}>Category</Text>
                     <View style={styles.buttonContainer}>
-                        
+                        <CustomSearchSelect 
+                            // style={styles.selectStyle}
+                            inputIcon = "list" 
+                            iconSize={20} 
+                            placeholderText="Select Category" 
+                            iconRight= "angle-down"
+                            // value={this.state.category}
+                            // onChangeText={category => this.setState({category: category})}
+                        />
                     </View>
                 </View>
                 <View
@@ -129,8 +136,6 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection:'row'
-    }
-
-
+    },
 })
 export default Filter

@@ -27,7 +27,6 @@ const SideMenu = (props) => {
                         <Text style={styles.space}>Anbu David</Text>
                     </View>
                 </View>
-                    
                     <DrawerItem
                         icon={ ()=>(<Icon name="user-o" size={15}/>)}
                         label="Profile"
@@ -49,6 +48,11 @@ const SideMenu = (props) => {
                         onPress={()=>{props.navigation.navigate('Submit Request')}} 
                      />
                      <DrawerItem
+                        icon={ ()=>(<Icon name="envelope-o" size={15}/>)}
+                        label="Email Subscription"
+                        onPress={()=>{props.navigation.navigate('EmailSubscription')}} 
+                     />
+                     <DrawerItem
                         icon={ ()=>(<Icon name="unlock-alt" size={15}/>)}
                         label="Change Password"
                         onPress={()=>{props.navigation.navigate('ChangePassword')}} 
@@ -60,14 +64,10 @@ const SideMenu = (props) => {
                      />
                      <TouchableOpacity  onPress={()=> {toggleTheme()}}>
                          <View style={[styles.switchContainer,styles.space]}>
-                             <Text>Dark Theme</Text>
-                                 <Switch style={{ marginLeft:50}} value={cDarkTheme}/>
-                                 </View>
-                             
-    
-                         
+                            <Text>Dark Theme</Text>
+                            <Switch style={{ marginLeft:50}} value={cDarkTheme}/>
+                        </View>
                      </TouchableOpacity>
-
             </DrawerContentScrollView>
         </View>
     )

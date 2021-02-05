@@ -1,0 +1,19 @@
+{
+    "components": {
+      "Autocomplete": {
+        "meta": {},
+        "appearances": {
+          "filled": {
+            "mapping": {},
+            "variantGroups": {
+              "status": {
+                "primary": {
+                  "backgroundColor": "pink"
+                }
+              }
+            } 
+          }
+        }
+      }
+    }
+  }
